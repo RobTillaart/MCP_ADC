@@ -1,7 +1,7 @@
 //
 //    FILE: MCP_ADC_performance.ino
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.1.0
+// VERSION: 0.1.1
 // PURPOSE: simple performance measurement.
 //    DATE: 2020-08-14
 
@@ -12,12 +12,12 @@
 
 #include "MCP_ADC.h"
 
-MCP3002 ADC2;
-MCP3004 ADC4;
-MCP3008 ADC8;
-MCP3202 ADC22;
-MCP3204 ADC24;
-MCP3208 ADC28;
+MCP3002 mcp2;
+MCP3004 mcp4;
+MCP3008 mcp8;
+MCP3202 mcp22;
+MCP3204 mcp24;
+MCP3208 mcp28;
 
 uint32_t start, stop;
 
@@ -26,42 +26,42 @@ void setup()
   Serial.begin(115200);
   Serial.println(__FILE__);
 
-  ADC2.begin(10);
-  ADC4.begin(9);
-  ADC8.begin(8);
+  mcp2.begin(10);
+  mcp4.begin(9);
+  mcp8.begin(8);
 
   Serial.println();
 
   Serial.println("ADC\tCHAN\tMAXVALUE");
-  Serial.print("ADC2\t");
-  Serial.print(ADC2.channels());
+  Serial.print("mcp2\t");
+  Serial.print(mcp2.channels());
   Serial.print("\t");
-  Serial.println(ADC2.maxValue());
+  Serial.println(mcp2.maxValue());
 
-  Serial.print("ADC4\t");
-  Serial.print(ADC4.channels());
+  Serial.print("mcp4\t");
+  Serial.print(mcp4.channels());
   Serial.print("\t");
-  Serial.println(ADC4.maxValue());
+  Serial.println(mcp4.maxValue());
 
-  Serial.print("ADC8\t");
-  Serial.print(ADC8.channels());
+  Serial.print("mcp8\t");
+  Serial.print(mcp8.channels());
   Serial.print("\t");
-  Serial.println(ADC8.maxValue());
+  Serial.println(mcp8.maxValue());
 
-  Serial.print("ADC22\t");
-  Serial.print(ADC22.channels());
+  Serial.print("mcp22\t");
+  Serial.print(mcp22.channels());
   Serial.print("\t");
-  Serial.println(ADC22.maxValue());
+  Serial.println(mcp22.maxValue());
 
-  Serial.print("ADC24\t");
-  Serial.print(ADC24.channels());
+  Serial.print("mcp24\t");
+  Serial.print(mcp24.channels());
   Serial.print("\t");
-  Serial.println(ADC24.maxValue());
+  Serial.println(mcp24.maxValue());
 
-  Serial.print("ADC28\t");
-  Serial.print(ADC28.channels());
+  Serial.print("mcp28\t");
+  Serial.print(mcp28.channels());
   Serial.print("\t");
-  Serial.println(ADC28.maxValue());
+  Serial.println(mcp28.maxValue());
 
 
   Serial.println("\nTiming in micros().\n");
@@ -75,7 +75,7 @@ void setup()
   for (int s = 1; s <= 16; s++)
   {
     Serial.println(s * 1000000);
-    ADC8.setSPIspeed(s);
+    mcp8.setSPIspeed(s);
     test_3();
   }
 
@@ -91,32 +91,32 @@ void test_1()
   uint32_t val = 0;
 
   start = micros();
-  for (int channel = 0 ; channel < ADC2.channels(); channel++)
+  for (int channel = 0 ; channel < mcp2.channels(); channel++)
   {
-    val += ADC2.analogRead(channel);
+    val += mcp2.analogRead(channel);
   }
   stop = micros();
-  Serial.print("ADC2.analogRead()\t2x: \t");
+  Serial.print("mcp2.analogRead()\t2x: \t");
   Serial.println(stop - start);
   delay(10);
 
   start = micros();
-  for (int channel = 0 ; channel < ADC2.channels(); channel++)
+  for (int channel = 0 ; channel < mcp2.channels(); channel++)
   {
-    val += ADC2.differentialRead(channel);
+    val += mcp2.differentialRead(channel);
   }
   stop = micros();
-  Serial.print("ADC2.differentialRead() 2x: \t");
+  Serial.print("mcp2.differentialRead() 2x: \t");
   Serial.println(stop - start);
   delay(10);
 
   start = micros();
-  for (int channel = 0 ; channel < ADC2.channels(); channel++)
+  for (int channel = 0 ; channel < mcp2.channels(); channel++)
   {
-    val += ADC2.deltaRead(channel);
+    val += mcp2.deltaRead(channel);
   }
   stop = micros();
-  Serial.print("ADC2.deltaRead()\t2x: \t");
+  Serial.print("mcp2.deltaRead()\t2x: \t");
   Serial.println(stop - start);
   Serial.println();
   delay(10);
@@ -127,32 +127,32 @@ void test_2()
   uint32_t val = 0;
 
   start = micros();
-  for (int channel = 0 ; channel < ADC4.channels(); channel++)
+  for (int channel = 0 ; channel < mcp4.channels(); channel++)
   {
-    val += ADC4.analogRead(channel);
+    val += mcp4.analogRead(channel);
   }
   stop = micros();
-  Serial.print("ADC4.analogRead()\t4x: \t");
+  Serial.print("mcp4.analogRead()\t4x: \t");
   Serial.println(stop - start);
   delay(10);
 
   start = micros();
-  for (int channel = 0 ; channel < ADC4.channels(); channel++)
+  for (int channel = 0 ; channel < mcp4.channels(); channel++)
   {
-    val += ADC4.differentialRead(channel);
+    val += mcp4.differentialRead(channel);
   }
   stop = micros();
-  Serial.print("ADC4.differentialRead() 4x: \t");
+  Serial.print("mcp4.differentialRead() 4x: \t");
   Serial.println(stop - start);
   delay(10);
 
   start = micros();
-  for (int channel = 0 ; channel < ADC4.channels(); channel++)
+  for (int channel = 0 ; channel < mcp4.channels(); channel++)
   {
-    val += ADC4.deltaRead(channel);
+    val += mcp4.deltaRead(channel);
   }
   stop = micros();
-  Serial.print("ADC4.deltaRead()\t4x: \t");
+  Serial.print("mcp4.deltaRead()\t4x: \t");
   Serial.println(stop - start);
   Serial.println();
   delay(10);
@@ -163,32 +163,32 @@ void test_3()
   uint32_t val = 0;
 
   start = micros();
-  for (int channel = 0 ; channel < ADC8.channels(); channel++)
+  for (int channel = 0 ; channel < mcp8.channels(); channel++)
   {
-    val += ADC8.analogRead(channel);
+    val += mcp8.analogRead(channel);
   }
   stop = micros();
-  Serial.print("ADC8.analogRead()\t8x: \t");
+  Serial.print("mcp8.analogRead()\t8x: \t");
   Serial.println(stop - start);
   delay(10);
 
   start = micros();
-  for (int channel = 0 ; channel < ADC8.channels(); channel++)
+  for (int channel = 0 ; channel < mcp8.channels(); channel++)
   {
-    val += ADC8.differentialRead(channel);
+    val += mcp8.differentialRead(channel);
   }
   stop = micros();
-  Serial.print("ADC8.differentialRead() 8x: \t");
+  Serial.print("mcp8.differentialRead() 8x: \t");
   Serial.println(stop - start);
   delay(10);
 
   start = micros();
-  for (int channel = 0 ; channel < ADC8.channels(); channel++)
+  for (int channel = 0 ; channel < mcp8.channels(); channel++)
   {
-    val += ADC8.deltaRead(channel);
+    val += mcp8.deltaRead(channel);
   }
   stop = micros();
-  Serial.print("ADC8.deltaRead()\t8x: \t");
+  Serial.print("mcp8.deltaRead()\t8x: \t");
   Serial.println(stop - start);
   Serial.println();
   delay(10);
