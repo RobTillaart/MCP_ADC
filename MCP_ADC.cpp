@@ -1,9 +1,9 @@
 //
 //    FILE: MCP_ADC.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.1.1
+// VERSION: 0.1.2
 //    DATE: 2019-10-24
-// PURPOSE: Arduino library for MCP3008
+// PURPOSE: Arduino library for MCP3002, MCP3004, MCP3008, MCP3202, MCP3204, MCP3208
 //     URL: https://github.com/RobTillaart/MCP_ADC
 //
 
@@ -22,6 +22,7 @@ MCP_ADC::MCP_ADC(uint8_t dataIn, uint8_t dataOut,  uint8_t clock)
     pinMode(_clock,   OUTPUT);
     digitalWrite(_dataOut, LOW);
     digitalWrite(_clock,   LOW);
+    // _SPIspeed = 0;   TODO set to zero if SW SPI
   }
 }
 
@@ -75,11 +76,12 @@ int16_t MCP_ADC::readADC(uint8_t channel, bool single)
   uint8_t  data[3] = { 0,0,0 };
   uint8_t  bytes = buildRequest(channel, single, data);
 
+  // TODO optimize _select handling
   if (_hwSPI)
   {
     SPI.beginTransaction(SPISettings(_SPIspeed, MSBFIRST, SPI_MODE0));
     digitalWrite(_select, LOW);
-    for (uint8_t b = 0; b < bytes; b++)  // prep 3002
+    for (uint8_t b = 0; b < bytes; b++)
     {
       data[b] = SPI.transfer(data[b]);
     }
@@ -97,6 +99,7 @@ int16_t MCP_ADC::readADC(uint8_t channel, bool single)
   }
 
   if (bytes == 2) return ((256 * data[0] + data[1]) & _maxValue);
+  // data[0]?
   return ((256 * data[1] + data[2]) & _maxValue);
 }
 
