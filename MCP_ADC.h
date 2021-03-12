@@ -2,7 +2,7 @@
 //
 //    FILE: MCP_ADC.h
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.1.3
+// VERSION: 0.1.4
 //    DATE: 2019-10-24
 // PURPOSE: Arduino library for MCP_ADC
 //     URL: https://github.com/RobTillaart/MCP_ADC
@@ -13,7 +13,7 @@
 #include "SPI.h"
 
 
-#define MCP_ADC_LIB_VERSION       (F("0.1.3"))
+#define MCP_ADC_LIB_VERSION       (F("0.1.4"))
 
 
 class MCP_ADC
