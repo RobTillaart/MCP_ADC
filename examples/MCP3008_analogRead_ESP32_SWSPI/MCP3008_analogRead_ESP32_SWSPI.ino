@@ -1,7 +1,7 @@
 //
 //    FILE: MCP3008_analogRead_ESP32_SWSPI.ino
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.1.1
+// VERSION: 0.1.0
 // PURPOSE: demo
 //    DATE: 2021-03-12
 

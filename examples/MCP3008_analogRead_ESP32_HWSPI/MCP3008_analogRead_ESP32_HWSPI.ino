@@ -38,6 +38,8 @@ void setup()
   Serial.print(mcp1.channels());
   Serial.print("\t");
   Serial.println(mcp1.maxValue());
+
+  mcp1.setSPIspeed(6000000);  // seems to be the max speed. use 4MHz to be safe
 }
 
 void loop()

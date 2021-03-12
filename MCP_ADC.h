@@ -39,7 +39,7 @@ protected:
   bool     _hwSPI;
   uint8_t  _channels;
   int16_t  _maxValue;
-  uint32_t _SPIspeed = 16000000;
+  uint32_t _SPIspeed = 1000000;   // 1MHz is a safe value (datasheet); in a test 4 MHz worked.
 
   // derived classes must implement this one
   virtual uint8_t  buildRequest(uint8_t channel, bool single, uint8_t * data) = 0;
