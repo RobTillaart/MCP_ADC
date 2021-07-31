@@ -32,6 +32,9 @@ public:
   void     setSPIspeed(uint32_t speed);
   uint32_t getSPIspeed()               { return _SPIspeed; };
 
+  // debugging
+  bool     usesHWSPI() { return _hwSPI; };
+
   // ESP32 specific
   #if defined(ESP32)
   void     selectHSPI() { _useHSPI = true;  };

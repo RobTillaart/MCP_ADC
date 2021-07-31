@@ -75,6 +75,20 @@ Differential channel table
 |   7     |    7     |    6     | 3x08 |
 
 
+### debug
+
+- **bool usesHWSPI()** returns true if HW SPI is used.
+
+
+### ESP32 specific
+
+- **void selectHSPI()** in case hardware SPI, the ESP32 has two options HSPI and VSPI.
+- **void selectVSPI()** see above.
+- **bool usesHSPI()** returns true if HSPI is used.
+- **bool usesVSPI()** returns true if VSPI is used.
+- **void setGPIOpins(clk, miso, mosi, select)** overrule GPIO pins of ESP32 for hardware SPI.
+
+
 ## About SPI Speed
 
 See https://github.com/RobTillaart/MCP_ADC/issues/3
