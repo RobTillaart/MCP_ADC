@@ -11,7 +11,9 @@
 MCP3208 mcp28;
 #define MCP3208_CS_PIN 25
 
-uint32_t start, stop;
+uint32_t start, stop, 
+         analog_read_time,
+         analog_read_multiple_time;
 
 const uint8_t num_channels = 8;
 uint8_t channels_list[num_channels] = {
@@ -62,8 +64,10 @@ void test()
     val += mcp28.analogRead(channel);
   }
   stop = micros();
+  analog_read_time = stop - start;
+  
   Serial.print("mcp28.analogRead()\t8x: \t");
-  Serial.println(stop - start);
+  Serial.println(analog_read_time);
   delay(10);
 
 
@@ -72,8 +76,13 @@ void test()
   
   mcp28.analogReadMultiple(channels_list, num_channels, readings);
   stop = micros();
+  analog_read_multiple_time = stop - start;
+
   Serial.print("mcp28.analogReadMultiple()\t8x: \t");
   Serial.println(stop - start);
+
+  Serial.print("analogRead() time / analogReadMultiple() time \t");
+  Serial.println(analog_read_time / analog_read_multiple_time);
   delay(10);
 
 

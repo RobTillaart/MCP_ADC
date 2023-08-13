@@ -131,41 +131,22 @@ int16_t MCP_ADC::readADC(uint8_t channel, bool single)
 
   _count++;
 
-  uint8_t  data[3] = { 0,0,0 };
-  uint8_t  bytes = buildRequest(channel, single, data);
+  int16_t reading[1];
+  MCP_ADC::readADCMultiple(&channel, 1, reading);
 
-  digitalWrite(_select, LOW);
-  if (_hwSPI)
-  {
-    mySPI->beginTransaction(_spi_settings);
-    for (uint8_t b = 0; b < bytes; b++)
-    {
-      data[b] = mySPI->transfer(data[b]);
-    }
-    mySPI->endTransaction();
-  }
-  else //  Software SPI
-  {
-    for (uint8_t b = 0; b < bytes; b++)
-    {
-      data[b] = swSPI_transfer(data[b]);
-    }
-  }
-  digitalWrite(_select, HIGH);
-
-  if (bytes == 2) return ((256 * data[0] + data[1]) & _maxValue);
-  // data[0]?
-  return ((256 * data[1] + data[2]) & _maxValue);
+  return reading[0];
 }
 
 void MCP_ADC::readADCMultiple(uint8_t channels[], uint8_t numChannels, int16_t readings[]) {
 
-  digitalWrite(_select, LOW);
   if (_hwSPI) {
     mySPI->beginTransaction(_spi_settings);
   }
 
   for (uint8_t i = 0; i < numChannels; i++) {
+
+    digitalWrite(_select, LOW);
+
     uint8_t data[3] = {0, 0, 0};
     uint8_t bytes = buildRequest(channels[i], true, data);
 
@@ -184,18 +165,13 @@ void MCP_ADC::readADCMultiple(uint8_t channels[], uint8_t numChannels, int16_t r
     } else {
       readings[i] = ((256 * data[1] + data[2]) & _maxValue);
     }
-    // Toggle CS only if there are more channels to read
-    if (i < numChannels - 1) {
-      digitalWrite(_select, LOW);
-      digitalWrite(_select, HIGH);
-    }
+
+    digitalWrite(_select, HIGH);
   }
 
   if (_hwSPI) {
     mySPI->endTransaction();
   }
-
-  digitalWrite(_select, HIGH);
 }
 
 //  MSBFIRST
