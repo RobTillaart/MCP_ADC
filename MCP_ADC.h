@@ -25,6 +25,7 @@ public:
   uint8_t  channels() { return _channels; };
   int16_t  maxValue() { return _maxValue; };
   int16_t  analogRead(uint8_t channel);
+  void     analogReadMultiple(uint8_t channels[], uint8_t numChannels, int16_t readings[]);
   int16_t  differentialRead(uint8_t channel);
   int16_t  deltaRead(uint8_t channel);
 
@@ -63,6 +64,8 @@ protected:
   virtual uint8_t  buildRequest(uint8_t channel, bool single, uint8_t * data) = 0;
 
   int16_t  readADC(uint8_t channel, bool single);
+  void readADCMultiple(uint8_t channels[], uint8_t numChannels, int16_t readings[]);
+
   uint8_t  swSPI_transfer(uint8_t d);
 
   SPIClass    * mySPI;
