@@ -119,6 +119,8 @@ void testChannelsRead() {
 
   for (uint8_t numChannelsToRead = 2; numChannelsToRead <= num_channels; numChannelsToRead++) {
 
+    delay(10);
+
     // analogRead()
     start = micros();
     for (uint8_t i = 0; i < numChannelsToRead; i++) {
@@ -139,6 +141,8 @@ void testChannelsRead() {
       channels_list[i] = i;
     }
 
+    delay(10);
+
     int16_t readings[numChannelsToRead];
     start = micros();
     mcp28.analogReadMultiple(channels_list, numChannelsToRead, readings);
@@ -151,7 +155,7 @@ void testChannelsRead() {
     Serial.println(analog_read_multiple_time);
 
     Serial.print("analogRead() time / analogReadMultiple() time \t");
-    Serial.println(analog_read_time / analog_read_multiple_time);
+    Serial.println((1.0 * analog_read_time) / analog_read_multiple_time, 2); // print as float
     
     Serial.println("\n");
     delay(10);
