@@ -8,7 +8,7 @@
 
 # MCP_ADC
 
-Arduino library for MCP3002 MCP3004 MCP3008 MCP3202 MCP3204 MCP3208 and compatibles.
+Arduino library for MCP3002 MCP3004 MCP3008 MCP3201 MCP3202 MCP3204 MCP3208 and compatibles.
 
 
 ## Description
@@ -17,14 +17,15 @@ This library reads the ADC ports of the MCP ADC convertors.
 The chips are communicates with SPI and support both hardware SPI or optional software SPI.
 
 
-| type    | bits | channels | notes |
-|:--------|:----:|:--------:|:------|
-| MCP3002 |  10  |    2     |       |
-| MCP3004 |  10  |    4     |       |
-| MCP3008 |  10  |    8     |       |
-| MCP3202 |  12  |    2     |       |
-| MCP3204 |  12  |    4     |       |
-| MCP3208 |  12  |    8     |       |
+|  type     |  bits  |  chan  |  notes  |
+|:----------|:------:|:------:|:--------|
+|  MCP3002  |   10   |    2   |
+|  MCP3004  |   10   |    4   |
+|  MCP3008  |   10   |    8   |
+|  MCP3201  |   12   |    1   |  not tested yet.
+|  MCP3202  |   12   |    2   |
+|  MCP3204  |   12   |    4   |
+|  MCP3208  |   12   |    8   |
 
 
 Current version allows manual override of the hardware SPI clock as the speed is not
@@ -52,6 +53,7 @@ use the hardware SPI, otherwise it will use software SPI.
 - **MCP3002(uint8_t dataIn, uint8_t dataOut, uint8_t clock)** constructor 10 bit ADC 2 channel.
 - **MCP3004(uint8_t dataIn, uint8_t dataOut, uint8_t clock)** constructor 10 bit ADC 4 channel.
 - **MCP3008(uint8_t dataIn, uint8_t dataOut, uint8_t clock)** constructor 10 bit ADC 8 channel.
+- **MCP3201(uint8_t dataIn, uint8_t dataOut, uint8_t clock)** constructor 12 bit ADC 1 channel.
 - **MCP3202(uint8_t dataIn, uint8_t dataOut, uint8_t clock)** constructor 12 bit ADC 2 channel.
 - **MCP3204(uint8_t dataIn, uint8_t dataOut, uint8_t clock)** constructor 12 bit ADC 4 channel.
 - **MCP3208(uint8_t dataIn, uint8_t dataOut, uint8_t clock)** constructor 12 bit ADC 8 channel.
@@ -103,7 +105,7 @@ The **selectVSPI()** or the **selectHSPI()** needs to be called
 BEFORE the **begin()** function.
 
 
-#### Experimental
+#### setGPIOpins() experimental
 
 - **void setGPIOpins(uint8_t clk, uint8_t miso, uint8_t mosi, uint8_t select)** 
 overrule GPIO pins of ESP32 for hardware SPI. needs to be called AFTER the **begin()** function.
@@ -130,14 +132,15 @@ This is the value recommended in the datasheet for 2.7V.
 
 In a test with an ESP32 (3.3V) the library showed stable results 
 at 4 MHz and at 6 MHz it was almost good.
- 
-The max value read at 6 MHz was 1020 instead of 1023  (MCP3008) 
-which indicates that the last 2 bits got lost due to signal deformation.
 
-| Board | Voltage |  safe  |  max  |
-|:-----:|:-------:|:------:|:-----:|
-| ESP32 |  2.7V   |  1 MHz | 4 MHz |
-| UNO   |  5.0V   |  2 MHz | 4 MHz |
+The maximum value read at 6 MHz was 1020 instead of 1023  (MCP3008) 
+which indicates that the last 2 bits got lost probably due to signal 
+deformation.
+
+|  Board  |  Voltage  |  safe   |   max   |
+|:-------:|:---------:|:-------:|:-------:|
+|  ESP32  |   2.7V    |  1 MHz  |  4 MHz  |
+|  UNO    |   5.0V    |  2 MHz  |  4 MHz  |
 
 
 For hardware SPI the ESP32 uses the VSPI pins. (see ESP examples).
@@ -159,22 +162,30 @@ Other patterns are possible.
 These scenarios need still to be tested in practice.
 
 
-## Operations
+## MCP3201 experimental
 
-See examples.
+Since 0.2.0 code for the MCP3201 has been added however this 12 bit single
+channel device has not been tested yet.
+
+As the SPI transfer looked quite a bit like the MCP3202 it is expected to work
+but the proof is in the hardware test.
+
+Note that not all function calls make sense for the MCP3201 as this device only
+has one channel. So use the library carefully.
+
+Feedback is as always welcome. 
 
 
 ## Future
 
 #### Must
 
-- documentation
+- improve documentation
 - test analogReadMultiple() scenario's
+- MCP3201 buy hardware and test
 
+#### Should
 
-#### should
-
-- MCP3201 test / add
 - improve SWSPI for AVR 
   (code is under test for MCP23S17)
 

@@ -108,6 +108,14 @@ public:
 };
 
 
+class MCP3201 : public MCP_ADC
+{
+public:
+  MCP3201(uint8_t dataIn = 255, uint8_t dataOut = 255, uint8_t clock = 255);
+  uint8_t  buildRequest(uint8_t channel, bool single, uint8_t * data);
+};
+
+
 class MCP3202 : public MCP_ADC
 {
 public:

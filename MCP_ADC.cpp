@@ -261,6 +261,31 @@ uint8_t MCP3008::buildRequest(uint8_t channel, bool single, uint8_t * data)
 
 /////////////////////////////////////////////////////////////////////////////
 //
+//  MCP3201
+//
+MCP3201::MCP3201(uint8_t dataIn, uint8_t dataOut, uint8_t clock)
+        :MCP_ADC(dataIn, dataOut, clock)
+{
+  _channels = 1;
+  _maxValue = 4095;
+}
+
+uint8_t MCP3201::buildRequest(uint8_t channel, bool single, uint8_t * data)
+{
+  //  P21  fig 6.1   MCP3201
+  //  no specific data needed
+  #if defined(ESP32)
+  //  keep build CI compiler happy.
+  channel = 0;
+  single  = false;
+  data[0] = 0;
+  #endif
+  return 2;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
 //  MCP3202
 //
 MCP3202::MCP3202(uint8_t dataIn, uint8_t dataOut, uint8_t clock)
