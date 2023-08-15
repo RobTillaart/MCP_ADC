@@ -161,6 +161,9 @@ the data from a specific channel multiple times, e.g. to be averaged.
 Other patterns are possible. 
 These scenarios need still to be tested in practice.
 
+Finally **analogReadMultiple()** can be used to read only one channel too
+by using numChannels = 1.
+
 
 ## MCP3201 experimental
 
