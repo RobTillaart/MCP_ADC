@@ -274,12 +274,10 @@ uint8_t MCP3201::buildRequest(uint8_t channel, bool single, uint8_t * data)
 {
   //  P21  fig 6.1   MCP3201
   //  no specific data needed
-  #if defined(ESP32)
-  //  keep build CI compiler happy.
+  //  keep build CI compiler happy (3 statements).
   channel = 0;
   single  = false;
   data[0] = 0;
-  #endif
   return 2;
 }
 
