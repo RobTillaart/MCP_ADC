@@ -129,10 +129,33 @@ int16_t MCP_ADC::readADC(uint8_t channel, bool single)
 {
   if (channel >= _channels) return 0;
 
-  int16_t reading[1];
-  MCP_ADC::readADCMultiple(&channel, 1, reading);
+  _count++;
 
-  return reading[0];
+  uint8_t  data[3] = { 0,0,0 };
+  uint8_t  bytes = buildRequest(channel, single, data);
+
+  digitalWrite(_select, LOW);
+  if (_hwSPI)
+  {
+    mySPI->beginTransaction(_spi_settings);
+    for (uint8_t b = 0; b < bytes; b++)
+    {
+      data[b] = mySPI->transfer(data[b]);
+    }
+    mySPI->endTransaction();
+  }
+  else  //  Software SPI
+  {
+    for (uint8_t b = 0; b < bytes; b++)
+    {
+      data[b] = swSPI_transfer(data[b]);
+    }
+  }
+  digitalWrite(_select, HIGH);
+
+  if (bytes == 2) return ((256 * data[0] + data[1]) & _maxValue);
+  // data[0]?
+  return ((256 * data[1] + data[2]) & _maxValue);
 }
 
 

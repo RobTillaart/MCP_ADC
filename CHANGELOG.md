@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - add performance example
   - add performance output files.
 - add support MCP3201 (experimental)
+- fix differentialRead()
 - update examples (print lib version).
 - update readme.md
 - update library.properties
