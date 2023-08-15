@@ -129,15 +129,16 @@ int16_t MCP_ADC::readADC(uint8_t channel, bool single)
 {
   if (channel >= _channels) return 0;
 
-  _count++;
-
   int16_t reading[1];
   MCP_ADC::readADCMultiple(&channel, 1, reading);
 
   return reading[0];
 }
 
-void MCP_ADC::readADCMultiple(uint8_t channels[], uint8_t numChannels, int16_t readings[]) {
+
+void MCP_ADC::readADCMultiple(uint8_t channels[], uint8_t numChannels, int16_t readings[])
+{
+  _count += numChannels;
 
   if (_hwSPI) {
     mySPI->beginTransaction(_spi_settings);
@@ -173,6 +174,7 @@ void MCP_ADC::readADCMultiple(uint8_t channels[], uint8_t numChannels, int16_t r
     mySPI->endTransaction();
   }
 }
+
 
 //  MSBFIRST
 uint8_t  MCP_ADC::swSPI_transfer(uint8_t val)

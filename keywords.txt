@@ -15,6 +15,7 @@ channels	KEYWORD2
 maxValue	KEYWORD2
 
 analogRead	KEYWORD2
+analogReadMultiple	KEYWORD2
 differentialRead	KEYWORD2
 deltaRead	KEYWORD2
 

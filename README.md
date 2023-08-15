@@ -40,8 +40,14 @@ This delta mode can return negative values too.
 
 ## Interface
 
+```cpp
+#include "MCP_ADC.h"
+```
+
+#### Base
+
 If the pins are not set in the constructor, the class will automatically
-use the hardware SPI, otherwise it will use a software SPI.
+use the hardware SPI, otherwise it will use software SPI.
 
 - **MCP3002(uint8_t dataIn, uint8_t dataOut, uint8_t clock)** constructor 10 bit ADC 2 channel.
 - **MCP3004(uint8_t dataIn, uint8_t dataOut, uint8_t clock)** constructor 10 bit ADC 4 channel.
@@ -54,6 +60,8 @@ use the hardware SPI, otherwise it will use a software SPI.
 - **int16_t maxValue()** returns maxReading of adc, e.g. 1023.
 This makes it easy to calculate relative measurements.
 - **int16_t analogRead(uint8_t channel)** reads the value of a single channel.
+- **void analogReadMultiple(uint8_t channels[], uint8_t numChannels, int16_t readings[])**
+reads multiple channels in one call. See section below.
 - **int16_t differentialRead(uint8_t channel)** reads differential between two channels.  
 Check datasheet for details.  
 Note if the **IN+** is equal or below **IN-** this function will return 0.
@@ -64,7 +72,7 @@ of the ADC first to get optimal speed.
 - **uint32_t getSPIspeed()** gets current speed in **Hz**.
 
 
-Differential channel table:
+### Differential channel table:
 
 | Channel | diff IN+ | diff IN- | MCP            |
 |:-------:|:--------:|:--------:|---------------:|
@@ -78,9 +86,10 @@ Differential channel table:
 |   7     |    7     |    6     |           3x08 |
 
 
-### debug
+### Debug
 
 - **bool usesHWSPI()** returns true if HW SPI is used.
+- **uint32_t count()** returns number of channels read since start.
 
 
 ### ESP32 specific
@@ -94,7 +103,7 @@ The **selectVSPI()** or the **selectHSPI()** needs to be called
 BEFORE the **begin()** function.
 
 
-#### experimental
+#### Experimental
 
 - **void setGPIOpins(uint8_t clk, uint8_t miso, uint8_t mosi, uint8_t select)** 
 overrule GPIO pins of ESP32 for hardware SPI. needs to be called AFTER the **begin()** function.
@@ -134,6 +143,22 @@ which indicates that the last 2 bits got lost due to signal deformation.
 For hardware SPI the ESP32 uses the VSPI pins. (see ESP examples).
 
 
+## analogReadMultiple() 
+
+Since version 0.2.0 the **analogReadMultiple(channels[], numChannels, readings[])** 
+is added to the interface.
+(See https://github.com/RobTillaart/MCP_ADC/pull/11 - Thanks to Alex Uta).
+
+This function allows to read multiple channels in one call, which improves 
+the performance of fetching new readings from the MCP_ADC device.
+The amount of gain differs per platform, so run your own performance test.
+
+Besides fetching all ADC's in one call this function also allows to fetch
+the data from a specific channel multiple times, e.g. to be averaged.
+Other patterns are possible. 
+These scenarios need still to be tested in practice.
+
+
 ## Operations
 
 See examples.
@@ -141,22 +166,25 @@ See examples.
 
 ## Future
 
-#### must
+#### Must
+
 - documentation
-- testing, a lot ...
+- test analogReadMultiple() scenario's
 
 
 #### should
 
+- MCP3201 test / add
+- improve SWSPI for AVR 
+  (code is under test for MCP23S17)
 
-#### could
-- analogRead (mask, int array\[8\] ) read ports (set in mask) in an array in one call.
-  would this save time?
+
+#### Could
 
 
-#### wont
+#### Wont
 
 - get / setF(float A, float B) => float readF(channel)   output = A\*value + B;
   it actually does float mapping. As it implies the same mapping for all it might 
-  not be that useful => multimap
+  not be that useful => check multiMap library.
 
