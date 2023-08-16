@@ -131,13 +131,37 @@ int16_t MCP_ADC::readADC(uint8_t channel, bool single)
 
   _count++;
 
-  int16_t reading[1];
-  MCP_ADC::readADCMultiple(&channel, 1, reading);
+  uint8_t  data[3] = { 0,0,0 };
+  uint8_t  bytes = buildRequest(channel, single, data);
 
-  return reading[0];
+  digitalWrite(_select, LOW);
+  if (_hwSPI)
+  {
+    mySPI->beginTransaction(_spi_settings);
+    for (uint8_t b = 0; b < bytes; b++)
+    {
+      data[b] = mySPI->transfer(data[b]);
+    }
+    mySPI->endTransaction();
+  }
+  else  //  Software SPI
+  {
+    for (uint8_t b = 0; b < bytes; b++)
+    {
+      data[b] = swSPI_transfer(data[b]);
+    }
+  }
+  digitalWrite(_select, HIGH);
+
+  if (bytes == 2) return ((256 * data[0] + data[1]) & _maxValue);
+  // data[0]?
+  return ((256 * data[1] + data[2]) & _maxValue);
 }
 
-void MCP_ADC::readADCMultiple(uint8_t channels[], uint8_t numChannels, int16_t readings[]) {
+
+void MCP_ADC::readADCMultiple(uint8_t channels[], uint8_t numChannels, int16_t readings[])
+{
+  _count += numChannels;
 
   if (_hwSPI) {
     mySPI->beginTransaction(_spi_settings);
@@ -173,6 +197,7 @@ void MCP_ADC::readADCMultiple(uint8_t channels[], uint8_t numChannels, int16_t r
     mySPI->endTransaction();
   }
 }
+
 
 //  MSBFIRST
 uint8_t  MCP_ADC::swSPI_transfer(uint8_t val)
@@ -254,6 +279,27 @@ uint8_t MCP3008::buildRequest(uint8_t channel, bool single, uint8_t * data)
   if (single) data[1] = 0x80;              //  single read | differential
   if (channel) data[1] |= (channel << 4);  //  channel
   return 3;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+//  MCP3201
+//
+MCP3201::MCP3201(uint8_t dataIn, uint8_t dataOut, uint8_t clock)
+        :MCP_ADC(dataIn, dataOut, clock)
+{
+  _channels = 1;
+  _maxValue = 4095;
+}
+
+uint8_t MCP3201::buildRequest(uint8_t channel, bool single, uint8_t * data)
+{
+  //  P21  fig 6.1   MCP3201
+  //  no specific data needed
+  //  keep build CI compiler (ESP32) happy next statement
+  if ((channel == 0) || (single == false)) return 2;
+  return 2;
 }
 
 

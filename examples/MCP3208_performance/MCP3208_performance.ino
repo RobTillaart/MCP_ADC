@@ -24,7 +24,9 @@ uint8_t channels_list[num_channels] = {
 void setup()
 {
   Serial.begin(115200);
-
+  Serial.println(__FILE__);
+  Serial.print("MCP_ADC_LIB_VERSION: ");
+  Serial.println(MCP_ADC_LIB_VERSION);
 
   Serial.println();
   Serial.println("ADC\tCHAN\tMAXVALUE");
@@ -37,7 +39,7 @@ void setup()
   delay(10);
 
   Serial.println("***************************************\n");
-  for (int s = 1; s <= 16;s++)
+  for (int s = 1; s <= 16; s++)
   {
     Serial.println(s * 1000000UL);
     mcp28.setSPIspeed(s * 1000000UL);
@@ -83,7 +85,7 @@ void test()
   Serial.println(stop - start);
 
   Serial.print("analogRead() time / analogReadMultiple() time \t");
-  Serial.println(analog_read_time / analog_read_multiple_time);
+  Serial.println((1.0 * analog_read_time) / analog_read_multiple_time);
   delay(10);
 
 
@@ -110,14 +112,15 @@ void test()
 
 }
 
+
 void testChannelsRead() {
   Serial.println("***************************************\n");
 
-  mcp28.setSPIspeed(8000000); // 8 MHz
+  mcp28.setSPIspeed(8000000);  //  8 MHz
   mcp28.begin(MCP3208_CS_PIN);
   Serial.println("8000000");
 
-  for (uint8_t numChannelsToRead = 2; numChannelsToRead <= num_channels; numChannelsToRead++) {
+  for (uint8_t numChannelsToRead = 1; numChannelsToRead <= num_channels; numChannelsToRead++) {
 
     delay(10);
 
@@ -155,7 +158,7 @@ void testChannelsRead() {
     Serial.println(analog_read_multiple_time);
 
     Serial.print("analogRead() time / analogReadMultiple() time \t");
-    Serial.println((1.0 * analog_read_time) / analog_read_multiple_time, 2); // print as float
+    Serial.println((1.0 * analog_read_time) / analog_read_multiple_time, 2);  //  print as float
     
     Serial.println("\n");
     delay(10);
@@ -164,4 +167,4 @@ void testChannelsRead() {
 }
 
 
-// -- END OF FILE --
+//  -- END OF FILE --
