@@ -21,7 +21,7 @@
 
 SPIClass * mySPI = new SPIClass(VSPI);  //  or HSPI
 
-MCP3008 mcp1(myspi);           //  use HWSPI on ESP32 (apparently VSPI)
+MCP3008 mcp1(mySPI);           //  use HWSPI on ESP32 (apparently VSPI)
 // MCP3008 mcp1(23, 19, 21);   //  ESP32 use SWSPI  dataIn, dataOut, Clock
 // MCP3008 mcp1(6, 7, 8);      //  UNO   use SWSPI  dataIn, dataOut, Clock
 
