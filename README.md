@@ -36,10 +36,10 @@ The library supports both hardware SPI and software SPI.
 Current version allows manual override of the hardware SPI clock as the speed is not
 optimized per ADC type. 
 
-The MCP ADC allows a single mode read which compares voltage of a single channel against GND.
+The MCP ADC's allow a single mode read which compares voltage of a single channel against GND.
 Furthermore they allow a differential mode which compares two channels **IN+** and **IN-** 
 to each other. 
-If the **IN+** is equal or below **IN-** the ADC will return 0. 
+If the **IN+** is equal or below **IN-** the ADC will return 0.
 
 Build into the library is a delta mode which is a software enhanced differential mode.
 This delta mode can return negative values too. 
