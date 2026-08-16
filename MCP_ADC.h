@@ -79,6 +79,8 @@ protected:
   void     readADCMultiple(uint8_t channels[], uint8_t numChannels, int16_t readings[]);
 
   uint8_t  swSPI_transfer(uint8_t d);
+  //  experimental
+  //  void     swSPI_transfer(uint8_t * data, uint8_t bytes);
 
   __SPI_CLASS__ * _mySPI;
   SPISettings   _spi_settings;

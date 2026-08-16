@@ -159,6 +159,7 @@ int16_t MCP_ADC::readADC(uint8_t channel, bool single)
   }
   else  //  Software SPI
   {
+    //  swSPI_transfer(data, bytes);  //  experimental
     for (uint8_t b = 0; b < bytes; b++)
     {
       data[b] = swSPI_transfer(data[b]);
@@ -198,16 +199,19 @@ void MCP_ADC::readADCMultiple(uint8_t channels[], uint8_t numChannels, int16_t r
 
     if (_hwSPI)
     {
-      //  _mySPI->transfer(data, bytes);
-      for (uint8_t b = 0; b < bytes; b++) {
+      //  _mySPI->transfer(data, bytes);  //  experimental
+      for (uint8_t b = 0; b < bytes; b++)
+      {
         data[b] = _mySPI->transfer(data[b]);
       }
     }
     else
     {
-      for (uint8_t b = 0; b < bytes; b++) {
-        data[b] = swSPI_transfer(data[b]);
-      }
+    // swSPI_transfer(data, bytes);  //  experimental
+    for (uint8_t b = 0; b < bytes; b++)
+    {
+      data[b] = swSPI_transfer(data[b]);
+    }
     }
 
     if (bytes == 2) {
@@ -248,6 +252,29 @@ uint8_t  MCP_ADC::swSPI_transfer(uint8_t val)
   }
   return rv;
 }
+
+//  EXPERIMENTAL
+// void  MCP_ADC::swSPI_transfer(uint8_t * data, uint8_t bytes)
+// {
+  // uint8_t clk = _clock;
+  // uint8_t dao = _dataOut;
+  // uint8_t dai = _dataIn;
+
+  // for (uint8_t i = 0; i < bytes; i++)
+  // {
+    // uint8_t rv = 0;
+    // uint8_t val = data[i];
+    // for (uint8_t mask = 0x80; mask; mask >>= 1)
+    // {
+      // digitalWrite(dao, (val & mask));
+      // digitalWrite(clk, HIGH);
+      // if (digitalRead(dai) == HIGH) rv |= mask;
+      // digitalWrite(clk, LOW);
+    // }
+    // data[i] = rv;
+  // }
+  // // return rv;
+// }
 
 
 /////////////////////////////////////////////////////////////////////////////

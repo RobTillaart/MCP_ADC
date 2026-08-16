@@ -256,6 +256,7 @@ Feedback is as always welcome.
 - optimize performance
   - improve SWSPI for AVR (See MCP23S17, fastShiftInOut et al))
   - optimizations (See #26)
+  - multibyte transfer (prepped)
 - rename readMultiChannel() iso readMultiple()
   - more descriptive
 - do performance test again

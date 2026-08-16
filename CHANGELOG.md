@@ -6,10 +6,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
-## [0.5.3] - 2026-xx-xx
+## [0.5.3] - 2026-08-16
 - add perfomance section in readme.md
-- add multibyte transfer for HW SPI (as comment).
 - update changelog 0.4.0 - more specific
+- prep for  multibyte transfer (commented)
 - minor edits
 
 ## [0.5.2] - 2026-01-04
