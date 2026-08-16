@@ -1,7 +1,7 @@
 //
 //    FILE: MCP_ADC.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.5.2
+// VERSION: 0.5.3
 //    DATE: 2019-10-24
 // PURPOSE: Arduino library for MCP3001, MCP3002, MCP3004, MCP3008, MCP3201, MCP3202, MCP3204, MCP3208
 //     URL: https://github.com/RobTillaart/MCP_ADC
@@ -150,6 +150,7 @@ int16_t MCP_ADC::readADC(uint8_t channel, bool single)
   if (_hwSPI)
   {
     _mySPI->beginTransaction(_spi_settings);
+    //  _mySPI->transfer(data, bytes);  //  TODO test with HW.
     for (uint8_t b = 0; b < bytes; b++)
     {
       data[b] = _mySPI->transfer(data[b]);
@@ -195,11 +196,15 @@ void MCP_ADC::readADCMultiple(uint8_t channels[], uint8_t numChannels, int16_t r
     uint8_t data[3] = {0, 0, 0};
     uint8_t bytes = buildRequest(channels[i], true, data);
 
-    if (_hwSPI) {
+    if (_hwSPI)
+    {
+      //  _mySPI->transfer(data, bytes);
       for (uint8_t b = 0; b < bytes; b++) {
         data[b] = _mySPI->transfer(data[b]);
       }
-    } else {
+    }
+    else
+    {
       for (uint8_t b = 0; b < bytes; b++) {
         data[b] = swSPI_transfer(data[b]);
       }

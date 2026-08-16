@@ -81,6 +81,39 @@ This makes it possible to support the ESP32-S3 and other processors in the futur
 Also it makes the library a bit simpler to maintain.
 
 
+### About Performance
+
+This section contains ideas how to optimize the library for performance.
+
+The MCP_ADC class is written with inheritance and portability in mind, so all the 
+different versions of the MCP_ADC family can be served on different boards.
+The price for this is that performance is not optimized.
+
+So it is possible to adjust the core for performance especially the **readADC()** 
+function, the workhorse of the library, if performance is the top requirement.
+
+An example to optimize (+50%) the performance for ESP32-C3 is discussed in issue 26
+- https://github.com/RobTillaart/MCP_ADC/issues/26  
+An optimized MCP_ADC_ESP library becomes a serious option given the performance 
+gains seen it that issue.
+
+For AVR it is technically possible to optimize the **swSPI_transfer()** function 
+by using direct port manipulation. How to can be seen e.g. in the library.
+- https://github.com/RobTillaart/FastShiftInOut
+
+Another performance idea is to have functions that samples one channel multiple
+times in a tight loop within one transaction. 
+Typical use is to average the readings e.g. **int16_t readAverage(channel, times)**.
+Or a more generic function **int16_t read(channel, data[], elements)**.
+The latter could implement the current **int16_t read(channel)** function
+quite simply, or allow to take the average of the samples made.
+
+There also exists a HW SPI->transfer(buffer, size) which should be faster than
+calling transfer() for individual bytes. These calls are added as comment in the
+readADC() and readADCMultiple() calls. These need to be confirmed with hardware 
+tests.
+
+
 ### Related
 
 - https://gammon.com.au/adc  tutorial about ADC's (UNO specific)
@@ -220,9 +253,13 @@ Feedback is as always welcome.
 
 #### Should
 
-- improve SWSPI for AVR 
-  (See MCP23S17)
-
+- optimize performance
+  - improve SWSPI for AVR (See MCP23S17, fastShiftInOut et al))
+  - optimizations (See #26)
+- rename readMultiChannel() iso readMultiple()
+  - more descriptive
+- do performance test again
+  - understand diff between 0.3.0 and 0.5.2
 
 #### Could
 
