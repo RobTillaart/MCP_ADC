@@ -100,6 +100,9 @@ gains seen it that issue.
 For AVR it is technically possible to optimize the **swSPI_transfer()** function 
 by using direct port manipulation. How to can be seen e.g. in the library.
 - https://github.com/RobTillaart/FastShiftInOut
+However the performance of the ADC is best around 2 MHz so not implemented.
+IN fact the SWSPI has gotten a conditional delayMIcroseconds(1) for faster CPU's
+to prevent the sampling speed to become too fast. 2MHz seems to be optimum - issue 26.
 
 Another performance idea is to have functions that samples one channel multiple
 times in a tight loop within one transaction. 
@@ -108,19 +111,17 @@ Or a more generic function **int16_t read(channel, data[], elements)**.
 The latter could implement the current **int16_t read(channel)** function
 quite simply, or allow to take the average of the samples made.
 
-There also exists a HW SPI->transfer(buffer, size) which should be faster than
-calling transfer() for individual bytes. These calls are added as comment in the
-readADC() and readADCMultiple() calls. These need to be confirmed with hardware 
-tests.
-
 
 ### Related
 
-- https://gammon.com.au/adc  tutorial about ADC's (UNO specific)
+ADC's
 - https://github.com/RobTillaart/ADS1x15  (12 & 16 bit ADC, I2C, slow)
 - https://github.com/RobTillaart/MCP_ADC  this library
 - https://github.com/RobTillaart/PCF8591  (8 bit ADC + 1 bit DAC)
 - https://github.com/RobTillaart/MCP_DAC  SPI based DAC
+
+Other
+- https://gammon.com.au/adc  tutorial about ADC's (UNO specific)
 
 
 ## Interface
@@ -253,11 +254,7 @@ Feedback is as always welcome.
 
 #### Should
 
-- optimize performance
-  - improve SWSPI for AVR (See MCP23S17, fastShiftInOut et al))
-  - optimizations (See #26)
-  - multibyte transfer (prepped)
-- rename readMultiChannel() iso readMultiple()
+- rename readMultiChannel() instead of readMultiple()
   - more descriptive
 - do performance test again
   - understand diff between 0.3.0 and 0.5.2
@@ -267,6 +264,8 @@ Feedback is as always welcome.
 
 #### Wont
 
+- improve SWSPI for AVR (See MCP23S17, fastShiftInOut et al))
+  - quality of signal is probably less when faster => see discussion #26
 - get / setF(float A, float B) => float readF(channel)   output = A\*value + B;
   it actually does float mapping. As it implies the same mapping for all it might 
   not be that useful => check multiMap library.

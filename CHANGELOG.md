@@ -7,9 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## [0.5.3] - 2026-08-16
-- add perfomance section in readme.md
+- fix actions from #26
+- add multi-byte transfer in one call
+- reduce SWSPI transfer speed for F_CPU >= 32 MHz
+- add performance section in readme.md
 - update changelog 0.4.0 - more specific
-- prep for  multibyte transfer (commented)
 - minor edits
 
 ## [0.5.2] - 2026-01-04
